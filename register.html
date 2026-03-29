@@ -21,6 +21,14 @@
     .btn-cancel { background: #eee; color: #333; }
     .btn-cancel:hover { background: #ddd; }
     .done { text-align: center; padding: 24px 0; color: #4285f4; font-size: 16px; }
+    .error { font-size: 12px; color: #e44; margin-top: 4px; }
+    .detail-level { display: flex; gap: 0; margin-bottom: 16px; }
+    .detail-level button { flex: 1; padding: 7px 0; font-size: 13px; border: 1px solid #ccc; background: #fff; color: #555; cursor: pointer; }
+    .detail-level button:first-child { border-radius: 4px 0 0 4px; }
+    .detail-level button:last-child { border-radius: 0 4px 4px 0; }
+    .detail-level button:not(:first-child) { border-left: none; }
+    .detail-level button.active { background: #4285f4; color: #fff; border-color: #4285f4; }
+    .detail-level button.active + button { border-left-color: #4285f4; }
   </style>
 </head>
 <body>
@@ -32,8 +40,17 @@
         <input id="word" readonly>
       </div>
       <div class="form-row">
+        <label>詳細度</label>
+        <div class="detail-level" id="detailLevel">
+          <button data-level="short" class="active">簡潔</button>
+          <button data-level="medium">標準</button>
+          <button data-level="detailed">詳細</button>
+        </div>
+      </div>
+      <div class="form-row">
         <label for="meaning">意味</label>
         <textarea id="meaning" placeholder="意味を入力"></textarea>
+        <p class="error" id="apiError" style="display:none;"></p>
       </div>
       <div class="actions">
         <button class="btn-cancel" id="cancel">キャンセル</button>
@@ -42,6 +59,7 @@
     </div>
     <div class="done" id="done" style="display:none;">登録しました。このタブを閉じてください。</div>
   </div>
+  <script src="gemini.js"></script>
   <script src="register.js"></script>
 </body>
 </html>

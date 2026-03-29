@@ -24,3 +24,7 @@ document.getElementById("add").addEventListener("click", async () => {
 document.getElementById("openList").addEventListener("click", () => {
   chrome.tabs.create({ url: chrome.runtime.getURL("list.html") });
 });
+
+document.getElementById("openSettings").addEventListener("click", () => {
+  chrome.runtime.openOptionsPage();
+});
