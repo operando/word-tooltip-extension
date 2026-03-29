@@ -96,6 +96,58 @@ document.addEventListener("mouseover", showTooltip);
 document.addEventListener("mousemove", positionTooltip);
 document.addEventListener("mouseout", hideTooltip);
 
+// --- Selection-based word registration ---
+let registerIcon = null;
+
+function removeRegisterIcon() {
+  if (registerIcon) { registerIcon.remove(); registerIcon = null; }
+}
+
+function showRegisterIcon(selectedText, rect) {
+  removeRegisterIcon();
+
+  const btn = document.createElement("button");
+  btn.className = "wt-register-icon";
+  btn.textContent = "+";
+  btn.title = `「${selectedText}」を登録`;
+  document.body.appendChild(btn);
+  registerIcon = btn;
+
+  const x = rect.right + window.scrollX + 4;
+  const y = rect.top + window.scrollY + (rect.height / 2) - 14;
+  btn.style.left = x + "px";
+  btn.style.top = y + "px";
+
+  btn.addEventListener("click", (e) => {
+    e.stopPropagation();
+    const url = chrome.runtime.getURL("register.html") + "?word=" + encodeURIComponent(selectedText);
+    chrome.runtime.sendMessage({ action: "openTab", url });
+    removeRegisterIcon();
+  });
+}
+
+document.addEventListener("mouseup", (e) => {
+  if (registerIcon && registerIcon.contains(e.target)) return;
+
+  const selection = window.getSelection();
+  const selectedText = selection.toString().trim();
+
+  if (!selectedText || selectedText.length > 100 || selectedText.includes("\n")) {
+    removeRegisterIcon();
+    return;
+  }
+
+  // Don't show if word is already registered
+  const alreadyRegistered = Object.keys(words).some(
+    (k) => k.toLowerCase() === selectedText.toLowerCase()
+  );
+  if (alreadyRegistered) return;
+
+  const range = selection.getRangeAt(0);
+  const rect = range.getBoundingClientRect();
+  showRegisterIcon(selectedText, rect);
+});
+
 // Load words and highlight
 chrome.storage.local.get({ words: {} }, (result) => {
   words = result.words;
