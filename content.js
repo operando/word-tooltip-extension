@@ -113,7 +113,7 @@ function showRegisterIcon(selectedText, rect) {
   document.body.appendChild(btn);
   registerIcon = btn;
 
-  const x = rect.right + window.scrollX + 4;
+  const x = rect.right + window.scrollX + 50;
   const y = rect.top + window.scrollY + (rect.height / 2) - 14;
   btn.style.left = x + "px";
   btn.style.top = y + "px";
